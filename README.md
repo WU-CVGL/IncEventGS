@@ -25,7 +25,7 @@
 [![arXiv](https://img.shields.io/badge/Arxiv-2407.02174-b31b1b.svg?logo=arXiv)](https://arxiv.org)
 </h5>
 
-> This repository is an official PyTorch implementation of the paper "IncEventGS: Pose-Free Gaussian Splatting from a Single Event Camera". We explore the possibility of recovering the 3D Gaussian and camera motion trajectory from a single event image. 
+> This repository is an official PyTorch implementation of the paper "IncEventGS: Pose-Free Gaussian Splatting from a Single Event Camera". We explore the possibility of recovering the 3D Gaussian and camera motion trajectory from a single event camera. 
 
 
 ## 📢 News
