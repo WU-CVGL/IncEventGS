@@ -2,7 +2,8 @@
 <p align="center">
     <a href="https://github.com/HuangJianxjtu">Jian Huang</a><sup>1,2</sup> &emsp;&emsp;
     <a href="https://github.com/forgetable233">Chengrui Dong</a><sup>1,2</sup> &emsp;&emsp;
-    <a href="https://ethliup.github.io/">Peidong Liu</a><sup>1*</sup>
+    <a href="https://github.com/mian-zhi">Xuanhua Chen</a><sup>2,3</sup> &emsp;&emsp;
+    <a href="https://ethliup.github.io/">Peidong Liu</a><sup>2*</sup>
 </p>
 
 
@@ -13,6 +14,7 @@
 <p align="center">
     <sup>1</sup>Zhejiang University &emsp;&emsp;
     <sup>2</sup>Westlake University &emsp;&emsp;
+    <sup>3</sup>Northeastern University &emsp;&emsp;
 </p>
 
 <hr>
@@ -29,9 +31,10 @@
 
 
 ## 📢 News
-&#9744; The code and data will be made public once the paper is accepted. Stay tuned!
+<!-- &#9744; The code and data will be made public once the paper is accepted. Stay tuned! -->
 
-`2024.10.11` Our paper is available on [arXiv](https://arxiv.org/abs/2410.08107)
+`2025.03.03` Our paper is accepted by CVPR 2025!
+`2024.10.11` Our paper is available on [arXiv](https://arxiv.org/abs/2410.08107).
 
 ## 📋 Overview
 
