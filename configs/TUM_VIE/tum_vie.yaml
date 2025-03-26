@@ -1,0 +1,184 @@
+inherit_from: configs/SimuEvent/simu_event.yaml
+
+dataset: 'tum_vie'
+SplineModel: Linear
+filter_imgs_num: 30
+
+use_uncertainty_in_BA: False
+BA_every_track: 1  # track BA_every_track times and perform one BA
+loss_acc_num_in_BA: 1
+map_grad_acc_step: 1  # its: loss_acc_num_in_BA*map_grad_acc_step
+pose_grad_acc_step: 1  # its: loss_acc_num_in_BA*pose_grad_acc_step
+use_uncertainty_in_Tracking: False
+mask_boundary_size: 20
+only_track_event_area: True
+fix_first_n_poses_in_BA: False
+blur_event: False
+blur_sigma: 0.001
+render_eventview_img: True
+render_tumvie_rgbCam_img: False
+num_frames_to_skip: 0
+use_gt_pose_to_opt: False
+bounding_size: 7.0
+loss:
+  norm_eve_loss: True
+
+evaluate_img: False
+opt_pose: True
+initOnly: False
+
+# 0: use absolute pose; 1: use relative pose from individual frame;  2: fix the first pose and use relative pose from it
+use_relative_pose_to_opt: 0 
+
+# depth estimation
+depth_estimation_init: 0 #0: Don't use depth initialization; 1: Estimate depth during initialization; 2: Use pre-estimated depth
+add_new_gs_step: 1  # every add_new_gs_step BA
+add_new_gs_from_estDepth: False
+
+data:
+  downsample: 1
+  sc_factor: 1
+  translation: 0
+  num_workers: 4
+  training_start_index: 0
+  training_end_index: -1
+  upsample_ts_factor: 1    #if upsample_ts_factor=2, [t1, t2] => [t1, (t1+t2)/2, t2], denoted as [t1, t2, t3]
+
+mapping:
+  sample: 2048
+  first_mesh: True
+  iters: 10
+  cur_frame_iters: 0
+  lr_embed: 0.01
+  lr_decoder: 0.01
+  lr_rot: 0.0001
+  lr_trans: 0.0001
+  pose_lr: 0.001
+  keyframe_every: 2
+  map_every: 1
+  n_pixels: 0.05
+  first_iters: 1000
+  optim_cur: True
+  min_pixels_cur: 20
+  map_accum_step: 1
+  pose_accum_step: 5
+  map_wait_step: 0
+  filter_depth: False
+  init_frame_num: 4
+  use_pose_format_of_vanilla_nerf: False
+  use_neg_exp_sampling_in_BA: False
+  map_frame_num: 21
+  use_median_blur: False
+  use_white_balance_loss: False
+  white_balance_weight: 0.01
+  event_loss_weight: 1.0
+
+tracking:
+  iter: 50
+  sample: 1024
+  pc_samples: 40960
+  lr_rot: 0.01
+  lr_trans: 0.01
+  pose_lr: 0.001
+  ignore_edge_W: 20
+  ignore_edge_H: 20
+  iter_point: 0
+  wait_iters: 100
+  const_speed: True
+  best: False
+  use_gt_pose_init: False
+
+grid:
+  enc: 'HashGrid'
+  tcnn_encoding: True
+  hash_size: 19
+  voxel_color: 0.08
+  voxel_sdf: 0.04
+  oneGrid: True
+
+pos:
+  enc: 'OneBlob'
+  n_bins: 16
+
+decoder:
+  geo_feat_dim: 15
+  hidden_dim: 32
+  num_layers: 2
+  num_layers_color: 2
+  hidden_dim_color: 32
+  tcnn_network: False
+
+cam:
+  H: 480
+  W: 768
+  fx: 548.409
+  fy: 548.409
+  cx: 384.0
+  cy: 240.0
+  png_depth_scale: False
+  crop_edge: 10
+  near: 0.5
+  far: 6.0
+  depth_trunc: 100.
+
+training:
+  gray_weight: 0.0
+  rgb_weight: 5.0
+  depth_weight: 0.1
+  sdf_weight: 1000
+  fs_weight: 10
+  event_weight: 1.0
+  c_recenter_weight: 1.0
+  eikonal_weight: 0
+  smooth_weight: 0.001
+  smooth_pts: 64
+  smooth_vox: 0.1
+  smooth_margin: 0.05
+  n_samples: 256
+  n_samples_d: 96
+  range_d: 0.25
+  n_range_d: 21
+  n_importance: 256
+  perturb: 1
+  white_bkgd: False
+  trunc: 0.1
+  rot_rep: 'axis_angle'
+  rgb_missing: 0.0
+
+mesh:
+  resolution: 512
+  render_color: False
+  vis: 100
+  voxel_eval: 0.05
+  voxel_final: 0.03
+  visualisation: False
+  save: True
+
+spline:
+  num_pose: 3
+
+initialization:
+  opt_pose: True
+  use_gt_pose: False
+  opt_first_pose: True
+  init_pose_with_identity: True
+  use_first_frame_depth: False
+  use_white_balance_loss: True
+  ctrl_knot_delta_t: 0.25
+  use_depth_init: False
+  depth_path: ./output/tum_vie-gt-enerf-pose/bad.npy
+
+event:
+  window_ts_us: 500
+  use_manual_N_window: False
+  N_window: 1000000
+  N_pix_event: 2048
+  N_pix_no_event: 1024
+  threshold: -1
+
+visualization:
+  num_rays_per_chunk: 1024
+  render_img_init: True
+  visualize_gt_event_img: False
+  render_novel_views: True
+  BA_render_est_gt_pose_views: True

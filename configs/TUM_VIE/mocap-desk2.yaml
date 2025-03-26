@@ -1,0 +1,180 @@
+inherit_from: configs/SimuEvent/simu_event.yaml
+dataset: 'tum_vie'
+
+# iteration number
+num_opti_steps_for_depthEst_init: 4501
+num_opti_steps_for_init: 4501
+num_opti_steps_for_tracking: 201
+num_opti_steps_for_BA: 1501
+num_opti_steps_for_global_BA: 2501
+num_opti_steps_for_final_global_BA: 4501
+
+refine_img_rendering_: False
+sliding_window_sz: 25
+num_events_window_for_init: 600000
+num_events_window_for_tracking: 1000000
+num_events_window_for_BA: 1000000
+num_events_window_for_BA_random: 1500000
+pose_lr: 0.0001
+
+
+use_linLog: True
+save_model: False
+visualize_inter_img_in_Tracking_BA: True
+num_intra_chunk_BAsampling_idx_batch: 10 # 1 ~ (sliding_window_sz-1)
+num_inter_chunk_BAsampling_idx_batch: 0
+num_con_inter_chunk_BAsampling_idx_batch: 0
+num_inter_chunk_initSampling_idx_batch: 2
+num_events_to_skip: 2000 # to avoid out of bound. about event number during 0.0001s
+ctrl_knot_step: 1
+tracking_batch_size: 1
+traj_mode_BA: linear # cspline or linear
+start_cspline_idx: 5
+batch_training_in_BA: 3
+blur_event: False
+blur_sigma: 0.001
+render_eventview_img: True
+render_tumvie_rgbCam_img: False
+event_loss_weight: 1.0
+use_mask_event_loss: True
+mask_event_loss_weight: 1.0
+
+# 0: use absolute pose; 1: use relative pose from individual frame;  2: fix the first pose and use relative pose from it
+use_relative_pose_to_opt: 0 
+
+# depth estimation
+depth_estimation_init: 1 #0: don't use depth; 1: estimate depth during initialization; 2: use pre-estimated depth
+depthEst_pretrained_model_path: /run/determined/workdir/datasets/event_slam/CVPR2025/open_data/depthEst_pretrained_model/models--Bingxin--Marigold/snapshots/0f4e0021da7a153804301f8b988e8b7b4daf056b
+
+only_track_event_area: False
+use_gt_pose_to_opt: False
+opt_pose: True
+initOnly: False
+
+evaluate_img: True
+eval_start_idx: 51 # corresponds in original files, not data.training_start_index
+eval_end_idx: 89
+eval_step_size: 1
+global_BA: True
+
+data:
+  datadir: /run/determined/workdir/datasets/event_slam/CVPR2025/open_data/tumvie
+  scene: mocap-desk2
+  output: output/final/tumvie/mocap-desk2
+  exp_name: demo
+  trainskip: 1
+  downsample_factor: 1
+  training_start_index: 50 # the size of training data depends on your computer memory size
+  training_end_index: 90 # -1 for the last index
+  num_frames_for_init: 3
+  upsample_ts_factor: 1    #if upsample_ts_factor=2, [t1, t2] => [t1, (t1+t2)/2, t2], denoted as [t1, t2, t3]
+  interval_selection: 1
+
+mapping:
+  bounding_size: 3.0 # very sensitive
+  # densification
+  prune_opa: 0.1 # GSs with opacity below this value will be pruned
+  refine_start_iter: 1500 # Start refining GSs after this iteration
+  refine_every: 500 # Refine GSs every this steps
+  refine_stop_iter: 3500 # Stop refining GSs after this iteration
+
+  color_channels: 1 # 1: grayscale; 3:RGB
+  ssim_loss_factor_: 0.05
+  loss_isotropic_weight: 0.0
+  no_event_gaussian_cov: 0.0
+  use_rgb_loss: False
+  loss_rgb_weight: 0.0
+  grow_grad2d: 0.0000001
+  grow_scale3d: 0.01
+  prune_scale3d: 0.1
+  
+  use_median_filter: False
+  use_white_balance_loss: True
+
+loss:
+  norm_eve_loss: True
+
+initialization:
+  num_frames_for_init: 3  # use how many frames event data in the initial
+  incre_sampling_seg_num_expected: 50
+  min_n_winsize: 500000
+  max_n_winsize: 1000000
+  training_batch_size: 5 #depends your GPU memory size
+  visualize_every_iter: 100
+  visualize_intermediate_img: True
+  gaussian_init_sfm_mask: 2 # 0 for using depth map mask; 1 for using event map mask; 2 for both
+  gaussian_num_sfm: 50000
+  retain_pose: False
+
+BA:
+  incre_sampling_seg_num_expected: 100
+  min_n_winsize: 500000
+  max_n_winsize: 1000000
+  training_batch_size: 5 #depends your GPU memory size
+  visualize_every_iter: 500
+  visualize_intermediate_img: False
+  global_BA_step: 10
+  refine_start_iter: 500
+  refine_stop_iter: 1000
+  refine_every: 250
+
+entropyloss:
+  N_rand: 6144
+  entropy_type: log2
+  entropy_acc_threshold: 0.8
+  computing_entropy_all: True
+  smoothing: False
+  entropy_ignore_smoothing: False
+  entropy_log_scaling: False
+  N_entropy: 500
+
+event:
+  window_ts_us: 2000
+  use_manual_N_window: True
+  N_window: 1000000
+  N_window_tracking: 5000
+  N_window_mapping: 200000
+  N_pix_event: 2048
+  N_pix_no_event: 1024
+  threshold: 0.2
+
+training:
+  n_samples: 64
+  n_importance: 64
+  render_gt_img: False
+  render_novel_views: True
+  se3_noise_low: 0.0000001  # 1e-7
+  se3_noise_high: 0.000001  # 1e-6
+
+visualization:
+  num_rays_per_chunk: 1024
+  render_img_init: True
+  visualize_gt_event_img: True
+  render_novel_views: False
+  BA_render_novel_views: False
+  BA_render_est_gt_pose_views: False
+
+tracking:
+  iter: 400
+  pose_lr: 0.001
+  render_gt_img: True
+  render_novel_views: False
+  use_init_checkpoint: True
+  checkpoint_path: ./output/Simu_Event/Replica/wo-entropyloss-init-wo-gt-full-model/checkpoint_init_3000.pt
+  N_pix: 8192
+  patch_size: 56
+  sample_pix_pattern: "random"
+  optim_first_c2w: True
+
+cam:
+  H: 180
+  W: 240
+  fx: 169.50404059859204
+  fy: 179.58096603591352
+  cx: 136.0468660434908
+  cy: 114.28206073946285
+  png_depth_scale: False
+  crop_edge: 10
+  near: 0.2
+  far: 7.5
+  depth_trunc: 100.

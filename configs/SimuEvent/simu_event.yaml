@@ -1,0 +1,249 @@
+dataset: 'simu_event'
+
+# sensitive parameters
+num_opti_steps_for_depthEst_init: 3501
+num_opti_steps_for_init: 3501
+num_opti_steps_for_tracking: 201
+num_opti_steps_for_BA: 1501
+num_opti_steps_for_global_BA: 2500
+num_opti_steps_for_final_global_BA: 4500
+refine_img_rendering_: False
+num_events_window_for_init: 300000
+num_events_window_for_tracking: 300000
+num_events_window_for_BA: 300000
+num_events_window_for_BA_random: 300000
+pose_lr: 0.0001
+sliding_window_sz: 20
+
+visualize_inter_img: True   # visualize the images and gaussians or not
+use_uncertainty_in_BA: False
+BA_every_track: 1  # track BA_every_track times and perform one BA
+batch_training_in_Tracking: 1
+loss_acc_num_in_BA: 1
+map_grad_acc_step: 1  # its: loss_acc_num_in_BA*map_grad_acc_step
+pose_grad_acc_step: 1  # its: loss_acc_num_in_BA*pose_grad_acc_step
+use_uncertainty_in_Tracking: False
+mask_boundary_size: 20
+only_track_event_area: False
+fix_first_n_poses_in_BA: False
+blur_event: False
+blur_sigma: 0.001
+add_new_gs_step: 1  # every add_new_gs_step BA
+gassian_incre_growing: True
+add_new_gs_from_estDepth: False
+render_eventview_img: True
+render_tumvie_rgbCam_img: False
+global_BA: True
+retain_old_gs: False
+
+evaluate_img: False
+eval_start_idx: 1 # corresponds in original files, not data.training_start_index
+eval_end_idx: 10
+eval_step_size: 1
+
+use_gt_pose_to_opt: False
+opt_pose: True
+initOnly: False
+polarity_offset: 0.0
+is_color: False
+systhetic_eventnerf_dataset: False
+evaluate_init_image: False
+
+event_loss_weight: 1.0
+use_mask_event_loss: False
+mask_event_loss_weight: 1.0
+use_linLog: True
+seprate_event_noevent_loss: False
+
+data:
+  downsample: 1
+  sc_factor: 1
+  translation: 0
+  num_workers: 4
+  interval_selection: 1
+
+mapping:
+  bounding_size: 7.0 # very sensitive
+  # densification
+  prune_opa: 0.1 # GSs with opacity below this value will be pruned
+  refine_start_iter: 500 # Start refining GSs after this iteration
+  refine_every: 250 # Refine GSs every this steps
+  refine_stop_iter: 2500 # Stop refining GSs after this iteration
+  grow_grad2d: 0.0002
+  grow_scale3d: 0.01
+  prune_scale3d: 0.1
+
+  color_channels: 1 # 1: grayscale; 3:RGB
+  ssim_loss_factor_: 0.1
+  loss_isotropic_weight: 10.0
+  use_rgb_loss: False
+  loss_rgb_weight: 1.0
+  no_event_gaussian_cov: 0.02
+  background: 0  # 0-white, 1-black, 2-grey
+  create_densify_points_num: 1000 # max number
+  densify_alpha_threshold: 0.8 # creat new gs in area where alpha < densify_alpha_threshold
+  tracking_mask_alpha_threshold: 0.8 # only track area where alpha > tracking_mask_alpha_th
+  min_depth: 0.1
+  max_depth: 1.1
+  tr_loss_weight: 0.0 # 0.000005
+  
+  sample: 2048
+  first_mesh: True
+  iters: 10
+  cur_frame_iters: 0
+  lr_embed: 0.001
+  lr_decoder: 0.001
+  lr_rot: 0.0001
+  lr_trans: 0.0001
+  pose_lr: 0.001
+  keyframe_every: 2
+  map_every: 1
+  n_pixels: 0.05
+  first_iters: 1000
+  optim_cur: True
+  min_pixels_cur: 20
+  map_accum_step: 1
+  pose_accum_step: 5
+  map_wait_step: 0
+  filter_depth: False
+  init_frame_num: 4
+  use_pose_format_of_vanilla_nerf: True
+  use_white_balance_loss: False
+  use_median_blur: False
+  white_balance_weight: 0.01
+  event_loss_weight: 1.0
+
+tracking:
+  iter: 50
+  sample: 1024
+  pc_samples: 40960
+  lr_rot: 0.01
+  lr_trans: 0.01
+  pose_lr: 0.001
+  ignore_edge_W: 20
+  ignore_edge_H: 20
+  iter_point: 0
+  wait_iters: 100
+  const_speed: True
+  best: True
+  use_gt_pose_init: False
+
+grid:
+  enc: 'HashGrid'
+  tcnn_encoding: True
+  hash_size: 19
+  voxel_color: 0.08
+  voxel_sdf: 0.04
+  oneGrid: True
+
+pos:
+  enc: 'OneBlob'
+  n_bins: 16
+
+decoder:
+  geo_feat_dim: 15
+  hidden_dim: 32
+  num_layers: 2
+  num_layers_color: 2
+  hidden_dim_color: 32
+  tcnn_network: False
+
+cam:
+  H: 480
+  W: 768
+  fx: 548.409
+  fy: 548.409
+  cx: 384.0
+  cy: 240.0
+  png_depth_scale: False
+  crop_edge: 10
+  near: 0.5
+  far: 6.0
+  depth_trunc: 100.
+
+training:
+  rgb_weight: 5.0
+  depth_weight: 0.1
+  sdf_weight: 1000
+  fs_weight: 10
+  event_weight: 1.0
+  c_recenter_weight: 1.0
+  eikonal_weight: 0
+  smooth_weight: 0.001
+  smooth_pts: 64
+  smooth_vox: 0.1
+  smooth_margin: 0.05
+  n_samples: 256
+  n_samples_d: 96
+  range_d: 0.25
+  n_range_d: 21
+  n_importance: 256
+  perturb: 1
+  white_bkgd: False
+  trunc: 0.1
+  rot_rep: 'axis_angle'
+  rgb_missing: 0.0
+
+mesh:
+  resolution: 512
+  render_color: False
+  vis: 100
+  voxel_eval: 0.05
+  voxel_final: 0.03
+  visualisation: False
+  save: True
+
+spline:
+  num_pose: 3
+
+BA:
+  incre_sampling_seg_num_expected: 100
+  min_n_winsize: 2000
+  max_n_winsize: 60000
+  training_batch_size: 50 #depends your GPU memory size
+  visualize_every_iter: 500
+  visualize_intermediate_img: False
+  global_BA_step: 10000
+  global_BA_seg: 20  # global_BA_seg*len(batch)
+  global_BA_step: 3000
+  refine_start_iter: 500
+  refine_stop_iter: 900
+  refine_every: 200
+  
+initialization:
+  num_frames_for_init: 100  # use how many frames event data in the initial
+  incre_sampling_seg_num_expected: 100
+  min_n_winsize: 2000
+  max_n_winsize: 60000
+  training_batch_size: 200 #depends your GPU memory size
+  visualize_every_iter: 100
+  visualize_intermediate_img: False
+  gaussian_init_sfm_mask: 0 # 0 for using depth map mask; 1 for using event map mask; 
+  gaussian_num_sfm: 30000
+  retain_pose: True
+
+  opt_pose: True
+  use_gt_pose: False
+  opt_first_pose: True
+  init_pose_with_identity: True
+  use_first_frame_depth: False
+  ctrl_knot_delta_t: 0.25
+  use_depth_init: False
+
+event:
+  window_ts_us: 500
+  N_window: 1000000
+  N_pix_event: 2048
+  N_pix_no_event: 1024
+  threshold: 0.1
+  linlog_thres: 20
+  clip: False
+  clip_min: -10.0
+  clip_max: 10.0
+
+visualization:
+  num_rays_per_chunk: 1024
+  render_img_init: True
+  visualize_gt_event_img: False
+  render_novel_views: True
+  BA_render_est_gt_pose_views: True

@@ -1,0 +1,159 @@
+inherit_from: configs/SimuEvent/simu_event.yaml
+dataset: 'replica_simu_event'
+
+# iteration number
+num_opti_steps_for_depthEst_init: 4501
+num_opti_steps_for_init: 3501
+num_opti_steps_for_tracking: 201
+num_opti_steps_for_BA: 1501
+
+num_events_window_for_init: 300000
+num_events_window_for_tracking: 300000
+num_events_window_for_BA: 300000
+num_events_window_for_BA_random: 300000
+pose_lr: 0.0001
+sliding_window_sz: 20
+is_color: False
+
+use_linLog: True
+save_model: False
+visualize_inter_img_in_Tracking_BA: True
+num_intra_chunk_BAsampling_idx_batch: 4 # 1 ~ (sliding_window_sz-1)
+num_inter_chunk_BAsampling_idx_batch: 0
+num_con_inter_chunk_BAsampling_idx_batch: 0
+num_inter_chunk_initSampling_idx_batch: 0
+num_events_to_skip: 2000 # to avoid out of bound. about event number during 0.0001s
+ctrl_knot_step: 1
+tracking_batch_size: 1
+traj_mode_BA: linear # cspline or linear
+start_cspline_idx: 5
+use_uncertainty_in_BA: False
+BA_every_track: 2  # track BA_every_track times and perform one BA
+batch_training_in_BA: 5
+batch_training_in_Tracking: 1
+render_eventview_img: True
+# 0: use absolute pose; 1: use relative pose from individual frame;  2: fix the first pose and use relative pose from it
+use_relative_pose_to_opt: 0
+use_mask_event_loss: True
+
+# depth estimation
+depth_estimation_init: 1 #0: don't use depth; 1: estimate depth during initialization; 2: use pre-estimated depth
+depthEst_pretrained_model_path: /run/determined/workdir/datasets/event_slam/CVPR2025/open_data/depthEst_pretrained_model/models--Bingxin--Marigold/snapshots/0f4e0021da7a153804301f8b988e8b7b4daf056b
+
+only_track_event_area: False
+use_gt_pose_to_opt: False
+opt_pose: True
+initOnly: False
+
+evaluate_img: True
+eval_start_idx: 21 # corresponds in original files, not data.training_start_index
+eval_end_idx: 119
+eval_step_size: 2
+
+data:
+  datadir: /run/determined/workdir/datasets/event_slam/CVPR2025/open_data/event_replica/office0
+  scene: None
+  output: output/final/office0
+  exp_name: demo
+  trainskip: 1
+  downsample_factor: 1
+  training_start_index: 10 # the size of training data depends on your computer memory size
+  training_end_index: 60 # -1 for the last index
+  # num_frames_for_init: 3
+  interval_selection: 2
+
+initialization:
+  num_frames_for_init: 5  # use how many frames event data in the initial
+  incre_sampling_seg_num_expected: 200
+  min_n_winsize: 80000
+  max_n_winsize: 400100
+  training_batch_size: 5 #depends your GPU memory size
+  visualize_every_iter: 100
+  visualize_intermediate_img: True
+  gaussian_init_sfm_mask: 0 # 0 for using depth map mask; 1 for using event map mask; 
+  gaussian_num_sfm: 30000
+
+BA:
+  incre_sampling_seg_num_expected: 100
+  min_n_winsize: 80000
+  max_n_winsize: 400100
+  training_batch_size: 5 #depends your GPU memory size
+  visualize_every_iter: 500
+  visualize_intermediate_img: False
+  global_BA_step: 30
+
+
+mapping:
+  bounding_size: 3.0 # very sensitive
+  # densification
+  prune_opa: 0.1 # GSs with opacity below this value will be pruned
+  refine_start_iter: 1000 # Start refining GSs after this iteration
+  refine_every: 300 # Refine GSs every this steps
+  refine_stop_iter: 3000 # Stop refining GSs after this iteration
+  grow_grad2d: 0.000001
+  grow_scale3d: 0.01
+  prune_scale3d: 0.1
+
+  color_channels: 1 # 1: grayscale; 3:RGB
+  ssim_loss_factor_: 0.05
+  loss_isotropic_weight: 0.0
+  no_event_gaussian_cov: 0.0
+  loss_rgb_weight: 0.0
+  
+  select_event_based_t: False
+  select_ray_based_event: True
+  first_iters: 10001
+  lr_embed: 0.0005
+  lr_decoder: 0.0005
+  lr_rot: 0.0001
+  lr_trans: 0.0001
+  pose_lr: 0.0001
+  cur_frame_iters: 200
+  vis_cur_frame: False
+  iters: 800
+  init_frame_num: 6
+  use_median_filter: False
+  use_white_balance_loss: False
+  white_balance_weight: 0.0
+
+tracking:
+  iter: 400
+  pose_lr: 0.0005
+  render_gt_img: True
+  render_novel_views: False
+  use_init_checkpoint: False
+  checkpoint_path: ''
+
+event:
+  window_ts_us: 10000
+  N_window: 300000
+  N_window_tracking: 300000
+  N_pix_event: 2048
+  N_pix_no_event: 1024
+
+training:
+  n_samples: 32
+  n_importance: 32
+  render_gt_img: False
+  render_novel_views: True
+
+visualization:
+  num_rays_per_chunk: 1024
+  render_img_init: True
+  visualize_gt_event_img: False
+  render_novel_views: False
+  BA_render_novel_views: False
+  BA_render_est_gt_pose_views: False
+
+cam:
+  H: 480
+  W: 768
+  fx: 384.0
+  fy: 384.0
+  cx: 384.0
+  cy: 240.0
+  png_depth_scale: 25.5 #for depth image in png format
+  crop_edge: 10
+  near: 0.0
+  far: 6.0
+  depth_trunc: 100.
