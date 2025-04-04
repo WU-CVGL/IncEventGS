@@ -33,7 +33,9 @@
 ## 📢 News
 <!-- &#9744; The code and data will be made public once the paper is accepted. Stay tuned! -->
 
-`2025.03.03` 🔥Our paper is accepted by CVPR 2025!
+`2025.04.04` 🔥Our paper has been selected as **CVPR 2025 Highlight**!
+
+`2025.03.03` 🔥Our paper has been accepted by CVPR 2025!
 
 `2024.10.11` Our paper is available on [arXiv](https://arxiv.org/abs/2410.08107).
 
