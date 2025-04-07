@@ -129,6 +129,29 @@ sh auto_single.sh [PATH_TO_IMG_EVAL] est gt
     evo_ape kitti [EST_PATH_NAME] [GT_PATH_NAME] --align -as
     ```
 
+### 5. Dataset Format
+
+**Our Replica(event) dataset** format is described as follows. It is recommended that you organize your custom datasets in this format if you want to run our method on **your own datasets**.
+
+```
+<dataset_name>              # e.g. room0
+├── poses_ts.txt
+├── traj.txt
+├── images
+    ├── frame000100.jpg   
+    ├── frame000150.jpg
+    ├── frame000200.jpg
+    ...
+├── event_threshold_0.1
+    ├── gray_events_data.npy
+```
+
+- traj.txt format
+```
+r11 r12 r13 r14 r21 r22 r23 r24 r31 r32 r33 r34 r41 r42 r43 r44
+```
+r is transformation matrix (4*4).
+
 ## Citation
 
 If you find this repository useful, please consider citing our paper:
